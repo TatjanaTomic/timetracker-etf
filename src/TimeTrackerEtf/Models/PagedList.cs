@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace TimeTrackerEtf.Models
 {
-    public class PageList<T>
+    public class PagedList<T>
     {
         public IEnumerable<T> Items { get; set; }
 
