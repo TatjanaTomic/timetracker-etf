@@ -22,7 +22,7 @@ namespace TimeTrackerEtf.Domain
         public int Hours { get; set; }
 
         [Required]
-        public string Descripption { get; set; }
+        public string Description { get; set; }
         public decimal HourRate { get; set; }
 
 
