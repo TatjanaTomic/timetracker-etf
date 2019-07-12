@@ -1,3 +1,4 @@
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -5,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using TimeTrackerEtf.Data;
+using TimeTrackerEtf.Models.Validation;
 
 namespace TimeTrackerEtf
 {
@@ -23,7 +25,10 @@ namespace TimeTrackerEtf
 
             services.AddDbContext<TimeTrackerDbContext>(options => options.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddControllers();
+            services.AddControllers()
+                 .AddFluentValidation(
+                     options => options
+                         .RegisterValidatorsFromAssemblyContaining<UserInputModelValidator>());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
