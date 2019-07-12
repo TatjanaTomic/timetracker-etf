@@ -61,5 +61,60 @@ namespace TimeTrackerEtf.Controllers
             };
         }
 
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(long id)
+        {
+            _logger.LogInformation($"Deleting user with id {id}");
+
+            var user = await _dbContext.Users.FindAsync(id);
+
+            if(user==null)
+            {
+                _logger.LogWarning($"No user found with id {id}");
+                return NotFound();
+            }
+
+            _dbContext.Users.Remove(user);
+            await _dbContext.SaveChangesAsync();
+
+            return Ok();
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<UserModel>> Create(UserInputModel model)
+        {
+            _logger.LogInformation($"Creating new user with name {model.Name}");
+
+            var user = new Domain.User();
+            model.MapTo(user);
+
+            await _dbContext.Users.AddAsync(user);
+            await _dbContext.SaveChangesAsync();
+
+            var resultModel = UserModel.FromUser(user);
+
+            return CreatedAtAction(nameof(GetById), "users", new { ide = user.Id }, resultModel);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult<UserModel>> Update(long id, UserInputModel model)
+        {
+            _logger.LogInformation($"Updating user with id {id}");
+
+            var user = await _dbContext.Users.FindAsync(id);
+
+            if (user == null)
+            {
+                _logger.LogWarning($"No user found with id {id}");
+                return NotFound();
+            }
+
+            model.MapTo(user);
+
+            _dbContext.Users.Update(user);
+            await _dbContext.SaveChangesAsync();
+
+            return UserModel.FromUser(user);
+        }
     }
 }
