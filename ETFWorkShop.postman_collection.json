@@ -1,0 +1,525 @@
+{
+	"info": {
+		"_postman_id": "338a7efa-44eb-40d6-9ac4-98b76034a48d",
+		"name": "ETFWorkShop",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get users",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:44397/api/users?page=1&size=5",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44397",
+					"path": [
+						"api",
+						"users"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "1"
+						},
+						{
+							"key": "size",
+							"value": "5"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get projects",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{initialURL}}/api/projects?page=1&size=5",
+					"host": [
+						"{{initialURL}}"
+					],
+					"path": [
+						"api",
+						"projects"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "1"
+						},
+						{
+							"key": "size",
+							"value": "5"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get time entries",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{initialURL}}/api/time-entries?page=1&size=5",
+					"host": [
+						"{{initialURL}}"
+					],
+					"path": [
+						"api",
+						"time-entries"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "1"
+						},
+						{
+							"key": "size",
+							"value": "5"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get clients",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{initialURL}}/api/clients?page=1&size=5",
+					"host": [
+						"{{initialURL}}"
+					],
+					"path": [
+						"api",
+						"clients"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "1"
+						},
+						{
+							"key": "size",
+							"value": "5"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get user",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{initialURL}}/api/users/1",
+					"host": [
+						"{{initialURL}}"
+					],
+					"path": [
+						"api",
+						"users",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get time entry",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{initialURL}}/api/time-entries/1",
+					"host": [
+						"{{initialURL}}"
+					],
+					"path": [
+						"api",
+						"time-entries",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get client",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{initialURL}}/api/clients/1",
+					"host": [
+						"{{initialURL}}"
+					],
+					"path": [
+						"api",
+						"clients",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get project",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{initialURL}}/api/projects/1",
+					"host": [
+						"{{initialURL}}"
+					],
+					"path": [
+						"api",
+						"projects",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create user",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\": \"New user\",\n\t\"HourRate\": 28\n}"
+				},
+				"url": {
+					"raw": "{{initialURL}}/api/users",
+					"host": [
+						"{{initialURL}}"
+					],
+					"path": [
+						"api",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create time entry",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"userId\": 2,\n\t\"projectId\": 1,\n\t\"entryDate\": \"2019-07-15\",\n\t\"hours\": 4,\n\t\"description\": \"Description\"\n}"
+				},
+				"url": {
+					"raw": "{{initialURL}}/api/time-entries",
+					"host": [
+						"{{initialURL}}"
+					],
+					"path": [
+						"api",
+						"time-entries"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create project",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\": \"New project\",\n\t\"clientId\": 1\n}"
+				},
+				"url": {
+					"raw": "{{initialURL}}/api/projects",
+					"host": [
+						"{{initialURL}}"
+					],
+					"path": [
+						"api",
+						"projects"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create client",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\": \"New client\"\n}"
+				},
+				"url": {
+					"raw": "{{initialURL}}/api/clients",
+					"host": [
+						"{{initialURL}}"
+					],
+					"path": [
+						"api",
+						"clients"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update user",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\": \"Modified user\",\n\t\"hourRate\": 21\n}"
+				},
+				"url": {
+					"raw": "{{initialURL}}/api/users/1",
+					"host": [
+						"{{initialURL}}"
+					],
+					"path": [
+						"api",
+						"users",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update client",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\": \"Modified client\"\n}"
+				},
+				"url": {
+					"raw": "{{initialURL}}/api/clients/1",
+					"host": [
+						"{{initialURL}}"
+					],
+					"path": [
+						"api",
+						"clients",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update project",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\": \"Modified project\",\n\t\"clientId\": 1\n}"
+				},
+				"url": {
+					"raw": "{{initialURL}}/api/clients/1",
+					"host": [
+						"{{initialURL}}"
+					],
+					"path": [
+						"api",
+						"clients",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete project",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{initialURL}}/api/projects/5",
+					"host": [
+						"{{initialURL}}"
+					],
+					"path": [
+						"api",
+						"projects",
+						"5"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete user",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{initialURL}}/api/users/5",
+					"host": [
+						"{{initialURL}}"
+					],
+					"path": [
+						"api",
+						"users",
+						"5"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete client",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{initialURL}}/api/clients/5",
+					"host": [
+						"{{initialURL}}"
+					],
+					"path": [
+						"api",
+						"clients",
+						"5"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "51910227-1513-4474-8f94-8dd62f7c22f5",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "ba383b40-b0f5-4fa1-a5bb-3fd6adde842c",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "085590a3-2956-498b-bf3c-45e87cce46bf",
+			"key": "initialURL",
+			"value": "https://localhost:44397",
+			"type": "string"
+		}
+	]
+}
