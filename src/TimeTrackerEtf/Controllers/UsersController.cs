@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -11,6 +12,7 @@ using TimeTrackerEtf.Models;
 namespace TimeTrackerEtf.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("/api/users")]
     public class UsersController : Controller
     {

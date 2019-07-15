@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
@@ -12,6 +13,7 @@ using TimeTrackerEtf.Models;
 namespace TimeTrackerEtf.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("/api/projects")]
     public class ProjectsController : Controller
     {

@@ -25,6 +25,8 @@ namespace TimeTrackerEtf
 
             services.AddDbContext<TimeTrackerDbContext>(options => options.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
 
+            services.AddJwtBearerAuthentication(Configuration);
+
             services.AddControllers()
                  .AddFluentValidation(
                      options => options
@@ -49,6 +51,7 @@ namespace TimeTrackerEtf
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
