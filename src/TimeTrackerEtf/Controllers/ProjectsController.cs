@@ -1,11 +1,9 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using TimeTrackerEtf.Data;
 using TimeTrackerEtf.Domain;
 using TimeTrackerEtf.Models;
@@ -20,7 +18,9 @@ namespace TimeTrackerEtf.Controllers
         private readonly TimeTrackerDbContext _dbContext;
         private readonly ILogger<ProjectsController> _logger;
 
-        public ProjectsController(TimeTrackerDbContext dbContext, ILogger<ProjectsController> logger)
+        public ProjectsController(
+            TimeTrackerDbContext dbContext,
+            ILogger<ProjectsController> logger)
         {
             _dbContext = dbContext;
             _logger = logger;
@@ -44,9 +44,11 @@ namespace TimeTrackerEtf.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<PagedList<ProjectModel>>> GetPage(int page = 1, int size = 5)
+        public async Task<ActionResult<PagedList<ProjectModel>>> GetPage(
+            int page = 1, int size = 5)
         {
-            _logger.LogDebug($"Getting a page {page} of projects with page size {size}");
+            _logger.LogDebug(
+                $"Getting a page {page} of projects with page size {size}");
 
             var projects = await _dbContext.Projects
                 .Include(x => x.Client)
@@ -63,6 +65,7 @@ namespace TimeTrackerEtf.Controllers
             };
         }
 
+        [Authorize(Roles = "admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(long id)
         {
@@ -81,8 +84,10 @@ namespace TimeTrackerEtf.Controllers
             return Ok();
         }
 
+        [Authorize(Roles = "admin")]
         [HttpPost]
-        public async Task<ActionResult<ProjectModel>> Create(ProjectInputModel model)
+        public async Task<ActionResult<ProjectModel>> Create(
+            ProjectInputModel model)
         {
             _logger.LogDebug($"Creating a new project with name {model.Name}");
 
@@ -103,8 +108,10 @@ namespace TimeTrackerEtf.Controllers
             return CreatedAtAction(nameof(GetById), "projects", new { id = project.Id }, resultModel);
         }
 
+        [Authorize(Roles = "admin")]
         [HttpPut("{id}")]
-        public async Task<ActionResult<ProjectModel>> Update(long id, ProjectInputModel model)
+        public async Task<ActionResult<ProjectModel>> Update(
+            long id, ProjectInputModel model)
         {
             _logger.LogDebug($"Updating project with id {id}");
 

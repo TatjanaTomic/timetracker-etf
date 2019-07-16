@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace TimeTrackerEtf.Models
 {
@@ -16,8 +14,6 @@ namespace TimeTrackerEtf.Models
         public int TotalCount { get; set; }
 
         public int TotalPages =>
-            (int) Math.Ceiling(TotalCount / (decimal)PageSize);
-
-
+            (int) Math.Ceiling(TotalCount / (decimal) PageSize);
     }
 }

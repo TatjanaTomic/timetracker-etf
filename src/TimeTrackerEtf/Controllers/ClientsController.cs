@@ -1,11 +1,9 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using TimeTrackerEtf.Data;
 using TimeTrackerEtf.Domain;
 using TimeTrackerEtf.Models;
@@ -20,7 +18,9 @@ namespace TimeTrackerEtf.Controllers
         private readonly TimeTrackerDbContext _dbContext;
         private readonly ILogger<ClientsController> _logger;
 
-        public ClientsController(TimeTrackerDbContext dbContext, ILogger<ClientsController> logger)
+        public ClientsController(
+            TimeTrackerDbContext dbContext,
+            ILogger<ClientsController> logger)
         {
             _dbContext = dbContext;
             _logger = logger;
@@ -42,24 +42,28 @@ namespace TimeTrackerEtf.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<PagedList<ClientModel>>> GetPage(int page = 1, int size = 5)
+        public async Task<ActionResult<PagedList<ClientModel>>> GetPage(
+            int page = 1, int size = 5)
         {
-            _logger.LogDebug($"Getting a page {page} of clients with page size {size}");
+            _logger.LogDebug(
+                $"Getting a page {page} of clients with page size {size}");
 
             var clients = await _dbContext.Clients
                 .Skip((page - 1) * size)
                 .Take(size)
                 .ToListAsync();
 
+            var totalCount = await _dbContext.Clients.CountAsync();
             return new PagedList<ClientModel>
             {
                 Items = clients.Select(ClientModel.FromClient),
                 Page = page,
                 PageSize = size,
-                TotalCount = await _dbContext.Clients.CountAsync()
+                TotalCount = totalCount
             };
         }
 
+        [Authorize(Roles = "admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(long id)
         {
@@ -78,10 +82,13 @@ namespace TimeTrackerEtf.Controllers
             return Ok();
         }
 
+        [Authorize(Roles = "admin")]
         [HttpPost]
-        public async Task<ActionResult<ClientModel>> Create(ClientInputModel model)
+        public async Task<ActionResult<ClientModel>> Create(
+            ClientInputModel model)
         {
-            _logger.LogDebug($"Creating a new client with name {model.Name}");
+            _logger.LogDebug(
+                $"Creating a new client with name {model.Name}");
 
             var client = new Client();
             model.MapTo(client);
@@ -94,8 +101,10 @@ namespace TimeTrackerEtf.Controllers
             return CreatedAtAction(nameof(GetById), "clients", new { id = client.Id }, resultModel);
         }
 
+        [Authorize(Roles = "admin")]
         [HttpPut("{id}")]
-        public async Task<ActionResult<ClientModel>> Update(long id, ClientInputModel model)
+        public async Task<ActionResult<ClientModel>> Update(
+            long id, ClientInputModel model)
         {
             _logger.LogDebug($"Updating client with id {id}");
 

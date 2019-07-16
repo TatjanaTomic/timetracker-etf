@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using TimeTrackerEtf.Domain;
+﻿using TimeTrackerEtf.Domain;
 
 namespace TimeTrackerEtf.Models
 {
@@ -11,7 +7,8 @@ namespace TimeTrackerEtf.Models
         private ProjectModel()
         {
         }
-        public long Id { set; get; }
+
+        public long Id { get; set; }
 
         public string Name { get; set; }
 
@@ -29,7 +26,5 @@ namespace TimeTrackerEtf.Models
                 ClientName = project.Client.Name
             };
         }
-
-
     }
 }

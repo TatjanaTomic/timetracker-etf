@@ -1,12 +1,10 @@
-﻿using FluentValidation;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System;
+using FluentValidation;
 
 namespace TimeTrackerEtf.Models.Validation
 {
-    public class TimeEntryInputModelValidator : AbstractValidator<TimeEntryInputModel>
+    public class TimeEntryInputModelValidator
+        : AbstractValidator<TimeEntryInputModel>
     {
         public TimeEntryInputModelValidator()
         {

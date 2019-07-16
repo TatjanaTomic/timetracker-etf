@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using TimeTrackerEtf.Domain;
+﻿using TimeTrackerEtf.Domain;
 
 namespace TimeTrackerEtf.Models
 {
@@ -12,7 +8,7 @@ namespace TimeTrackerEtf.Models
 
         public long ClientId { get; set; }
 
-        internal void MapTo(Project project)
+        public void MapTo(Project project)
         {
             project.Name = Name;
         }

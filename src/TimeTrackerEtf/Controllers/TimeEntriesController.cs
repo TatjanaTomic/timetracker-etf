@@ -1,37 +1,41 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using TimeTrackerEtf.Data;
 using TimeTrackerEtf.Domain;
 using TimeTrackerEtf.Models;
 
 namespace TimeTrackerEtf.Controllers
 {
-        
+    [ApiController]
+    [Authorize]
+    [Route("/api/time-entries/")]
     public class TimeEntriesController : Controller
     {
         private readonly TimeTrackerDbContext _dbContext;
         private readonly ILogger<TimeEntriesController> _logger;
-        public TimeEntriesController(TimeTrackerDbContext dbContext, ILogger<TimeEntriesController> logger)
+
+        public TimeEntriesController(
+            TimeTrackerDbContext dbContext,
+            ILogger<TimeEntriesController> logger)
         {
             _dbContext = dbContext;
             _logger = logger;
-
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<TimeEntryModel>> GetById(long id)
         {
-            _logger.LogInformation($"Getting a time entry with id: {id}");
+            _logger.LogInformation(
+                $"Getting a time entry with id: {id}");
 
             var timeEntry = await _dbContext.TimeEntries
-                .Include(x=>x.Project)
-                .Include(x=>x.Project.Client)
-                .Include(x=>x.User)
+                .Include(x => x.Project)
+                .Include(x => x.Project.Client)
+                .Include(x => x.User)
                 .SingleOrDefaultAsync(x => x.Id == id);
 
             if (timeEntry == null)
@@ -43,31 +47,37 @@ namespace TimeTrackerEtf.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<PagedList<TimeEntryModel>>> GetPage(int page = 1, int size = 5)
+        public async Task<ActionResult<PagedList<TimeEntryModel>>> GetPage(
+            int page = 1, int size = 5)
         {
-            _logger.LogInformation($"Getting a page {page} of time entries with page size {size}");
+            _logger.LogInformation(
+                $"Getting a page {page} of time entries with page size {size}");
 
             var timeEntries = await _dbContext.TimeEntries
-               .Include(x => x.User)
-               .Include(x => x.Project)
-               .Include(x => x.Project.Client)
-               .Skip((page - 1) * size)
-               .Take(size)
-               .ToListAsync();
+                .Include(x => x.Project)
+                .Include(x => x.Project.Client)
+                .Include(x => x.User)
+                .Skip((page - 1) * size)
+                .Take(size)
+                .ToListAsync();
 
+            var totalCount = await _dbContext.TimeEntries.CountAsync();
             return new PagedList<TimeEntryModel>
             {
                 Items = timeEntries.Select(TimeEntryModel.FromTimeEntry),
                 Page = page,
                 PageSize = size,
-                TotalCount = await _dbContext.TimeEntries.CountAsync()
+                TotalCount = totalCount
             };
         }
 
+
+        [Authorize(Roles = "admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(long id)
         {
-            _logger.LogDebug($"Deleting time entries with id {id}");
+            _logger.LogDebug(
+                $"Deleting time entries with id {id}");
 
             var timeEntry = await _dbContext.TimeEntries.FindAsync(id);
 
@@ -82,8 +92,10 @@ namespace TimeTrackerEtf.Controllers
             return Ok();
         }
 
+        [Authorize(Roles = "admin")]
         [HttpPost]
-        public async Task<ActionResult<TimeEntryModel>> Create(TimeEntryInputModel model)
+        public async Task<ActionResult<TimeEntryModel>> Create(
+            TimeEntryInputModel model)
         {
             _logger.LogDebug(
                 $"Creating a new time entry for user {model.UserId}, project {model.ProjectId} and date {model.EntryDate}");
@@ -98,7 +110,12 @@ namespace TimeTrackerEtf.Controllers
                 return NotFound();
             }
 
-            var timeEntry = new TimeEntry { User = user, Project = project, HourRate = user.HourRate };
+            var timeEntry = new TimeEntry
+            {
+                User = user,
+                Project = project,
+                HourRate = user.HourRate
+            };
             model.MapTo(timeEntry);
 
             await _dbContext.TimeEntries.AddAsync(timeEntry);
@@ -106,11 +123,15 @@ namespace TimeTrackerEtf.Controllers
 
             var resultModel = TimeEntryModel.FromTimeEntry(timeEntry);
 
-            return CreatedAtAction(nameof(GetById), "TimeEntries", new { id = timeEntry.Id }, resultModel);
+            return CreatedAtAction(
+                nameof(GetById), "TimeEntries",
+                new { id = timeEntry.Id }, resultModel);
         }
 
+        [Authorize(Roles = "admin")]
         [HttpPut("{id}")]
-        public async Task<ActionResult<TimeEntryModel>> Update(long id, TimeEntryInputModel model)
+        public async Task<ActionResult<TimeEntryModel>> Update(
+            long id, TimeEntryInputModel model)
         {
             _logger.LogDebug($"Updating time entry with id {id}");
 

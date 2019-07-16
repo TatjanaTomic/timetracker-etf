@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -18,21 +16,21 @@ namespace TimeTrackerEtf.Controllers
     {
         private readonly TimeTrackerDbContext _dbContext;
         private readonly ILogger<UsersController> _logger;
-        public UsersController(TimeTrackerDbContext dbContext, ILogger<UsersController> logger)
+
+        public UsersController(
+            TimeTrackerDbContext dbContext, ILogger<UsersController> logger)
         {
             _dbContext = dbContext;
             _logger = logger;
-
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<UserModel>> GetById(long id)
         {
             _logger.LogInformation($"Getting user by id: {id}");
-
             var user = await _dbContext.Users.FindAsync(id);
 
-            if(user==null)
+            if (user == null)
             {
                 _logger.LogWarning($"User with id: {id} not found");
                 return NotFound();
@@ -42,16 +40,16 @@ namespace TimeTrackerEtf.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<PagedList<UserModel>>> GetPage
-            (int page=1, int size=5)
+        public async Task<ActionResult<PagedList<UserModel>>> GetPage(
+            int page = 1, int size = 5)
         {
-            _logger.LogInformation($"Getting a page {page} of users with page size {size}");
+            _logger.LogInformation(
+                $"Getting a page {page} of users with page size {size}");
 
             var users = await _dbContext.Users
                 .Skip((page - 1) * size)
                 .Take(size)
                 .ToListAsync();
-
             var totalUsers = await _dbContext.Users.CountAsync();
 
             return new PagedList<UserModel>
@@ -63,14 +61,16 @@ namespace TimeTrackerEtf.Controllers
             };
         }
 
+        [Authorize(Roles = "admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(long id)
         {
-            _logger.LogInformation($"Deleting user with id {id}");
+            _logger.LogInformation(
+                $"Deleting user with id {id}");
 
             var user = await _dbContext.Users.FindAsync(id);
 
-            if(user==null)
+            if (user == null)
             {
                 _logger.LogWarning($"No user found with id {id}");
                 return NotFound();
@@ -82,10 +82,13 @@ namespace TimeTrackerEtf.Controllers
             return Ok();
         }
 
+        [Authorize(Roles = "admin")]
         [HttpPost]
-        public async Task<ActionResult<UserModel>> Create(UserInputModel model)
+        public async Task<ActionResult<UserModel>> Create(
+            UserInputModel model)
         {
-            _logger.LogInformation($"Creating new user with name {model.Name}");
+            _logger.LogInformation(
+                $"Creating a new user with name {model.Name}");
 
             var user = new Domain.User();
             model.MapTo(user);
@@ -95,13 +98,18 @@ namespace TimeTrackerEtf.Controllers
 
             var resultModel = UserModel.FromUser(user);
 
-            return CreatedAtAction(nameof(GetById), "users", new { ide = user.Id }, resultModel);
+            return CreatedAtAction(
+                nameof(GetById), "users",
+                new {id = user.Id}, resultModel);
         }
 
+        [Authorize(Roles = "admin")]
         [HttpPut("{id}")]
-        public async Task<ActionResult<UserModel>> Update(long id, UserInputModel model)
+        public async Task<ActionResult<UserModel>> Update(
+            long id, UserInputModel model)
         {
-            _logger.LogInformation($"Updating user with id {id}");
+            _logger.LogInformation(
+                $"Updating user with id {id}");
 
             var user = await _dbContext.Users.FindAsync(id);
 

@@ -1,20 +1,20 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System;
 using System.Net;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace TimeTrackerEtf
 {
     public class ErrorHandlingMiddleware
     {
-        private readonly RequestDelegate _next;
-        private readonly ILogger<ErrorHandlingMiddleware> _logger;
-        public ErrorHandlingMiddleware(RequestDelegate next, ILogger<ErrorHandlingMiddleware> logger)
+        private RequestDelegate _next;
+        private ILogger<ErrorHandlingMiddleware> _logger;
+
+        public ErrorHandlingMiddleware(
+            RequestDelegate next, ILogger<ErrorHandlingMiddleware> logger)
         {
             _next = next;
             _logger = logger;
@@ -26,7 +26,7 @@ namespace TimeTrackerEtf
             {
                 await _next(context);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
 
@@ -34,11 +34,12 @@ namespace TimeTrackerEtf
             }
         }
 
-        private static Task HandleExceptionAsync(HttpContext context, Exception ex)
+        private static Task HandleExceptionAsync(
+            HttpContext context, Exception ex)
         {
             var code = HttpStatusCode.InternalServerError;
 
-            //TODO: Change code based on exception
+            // TODO: Change code based on exception
 
             var problem = new ProblemDetails
             {
@@ -46,16 +47,15 @@ namespace TimeTrackerEtf
                 Title = "Internal server error",
                 Detail = ex.Message,
                 Instance = "",
-                Status = (int)code
+                Status = (int) code
             };
 
             var result = JsonSerializer.ToString(problem);
 
             context.Response.ContentType = "application/problem+json";
-            context.Response.StatusCode = (int)code;
+            context.Response.StatusCode = (int) code;
 
             return context.Response.WriteAsync(result);
         }
-
     }
 }

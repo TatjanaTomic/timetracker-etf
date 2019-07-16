@@ -1,22 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using TimeTrackerEtf.Domain;
 
 namespace TimeTrackerEtf.Models
 {
     public class TimeEntryModel
     {
-        public long Id { get; set;}
+        public long Id { get; set; }
 
         public long ProjectId { get; set; }
 
         public string ProjectName { get; set; }
 
         public string ClientName { get; set; }
-
-        public long ClientId { get; set; }
 
         public long UserId { get; set; }
 
@@ -37,18 +32,16 @@ namespace TimeTrackerEtf.Models
             return new TimeEntryModel
             {
                 Id = timeEntry.Id,
-                UserId = timeEntry.User.Id,
-                UserName = timeEntry.User.Name,
                 ProjectId = timeEntry.Project.Id,
                 ProjectName = timeEntry.Project.Name,
-                ClientId = timeEntry.Project.Client.Id,
                 ClientName = timeEntry.Project.Client.Name,
+                UserId = timeEntry.User.Id,
+                UserName = timeEntry.User.Name,
                 EntryDate = timeEntry.EntryDate,
                 Hours = timeEntry.Hours,
-                HourRate = timeEntry.HourRate,
-                Description = timeEntry.Description
+                Description = timeEntry.Description,
+                HourRate = timeEntry.HourRate
             };
         }
-
     }
 }
