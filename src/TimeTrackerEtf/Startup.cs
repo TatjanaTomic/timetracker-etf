@@ -56,6 +56,9 @@ namespace TimeTrackerEtf
             app.UseAuthentication();
             app.UseAuthorization();
 
+            app.UseOpenApi();
+            app.UseSwaggerUi3();
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
