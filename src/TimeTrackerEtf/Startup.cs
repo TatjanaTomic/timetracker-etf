@@ -30,13 +30,16 @@ namespace TimeTrackerEtf
 
             services.AddJwtBearerAuthentication(Configuration);
 
+            services.AddOpenApi();
+
             services.AddControllers()
                 .AddFluentValidation(
                     options => options
                         .RegisterValidatorsFromAssemblyContaining<UserInputModelValidator>());
 
             services.AddHealthChecks()
-                .AddSqlite(Configuration.GetConnectionString("DeffaultConnection"));
+                .AddSqlite(
+                    Configuration.GetConnectionString("DefaultConnection"));
 
             services.AddHealthChecksUI();
         }
@@ -72,11 +75,12 @@ namespace TimeTrackerEtf
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapHealthChecks("/health", new HealthCheckOptions
-                {
-                    Predicate = _ => true,
-                    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
-                });
+                endpoints.MapHealthChecks(
+                    "/health", new HealthCheckOptions
+                    {
+                        Predicate = _ => true,
+                        ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+                    });
             });
         }
     }

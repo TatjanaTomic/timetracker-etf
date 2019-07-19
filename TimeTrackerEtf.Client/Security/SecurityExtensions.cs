@@ -1,15 +1,12 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace TimeTrackerEtf.Client.Models.Security
+namespace TimeTrackerEtf.Client.Security
 {
     public static class SecurityExtensions
     {
-        public static void AddTokenAuthenticationStateProvider(this IServiceCollection services)
+        public static void AddTokenAuthenticationStateProvider(
+            this IServiceCollection services)
         {
             services.AddScoped<TokenAuthenticationStateProvider>();
             services.AddScoped<AuthenticationStateProvider>(

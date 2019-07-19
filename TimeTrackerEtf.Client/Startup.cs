@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Components.Builder;
 using Microsoft.Extensions.DependencyInjection;
-using TimeTrackerEtf.Client.Models.Security;
+using TimeTrackerEtf.Client.Security;
 
 namespace TimeTrackerEtf.Client
 {
