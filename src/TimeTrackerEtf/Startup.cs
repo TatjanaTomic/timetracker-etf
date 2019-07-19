@@ -58,7 +58,7 @@ namespace TimeTrackerEtf
             }
 
             app.UseMiddleware<ErrorHandlingMiddleware>();
-            app.UseMiddleware<LimitingMiddleware>();
+           // app.UseMiddleware<LimitingMiddleware>();
 
             app.UseHttpsRedirection();
 
