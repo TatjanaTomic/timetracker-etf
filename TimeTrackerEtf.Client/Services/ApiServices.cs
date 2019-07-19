@@ -31,46 +31,39 @@ namespace TimeTrackerEtf.Client.Services
             return JsonSerializer.Parse<T>(responseContent, _options);
         }
 
-        public async task <bool> CreateAsync<T>(string url, T inputModel)
+        public async Task<bool> CreateAsync<T>(string url, T inputModel)
         {
             var response = await SendAuthorizedRequest<T>(HttpMethod.Post, url, inputModel);
             return response.IsSuccessStatusCode;
         }
 
-        public async task<bool> UpdateAsync<T>(string url, T inputModel)
+        public async Task<bool> UpdateAsync<T>(string url, T inputModel)
         {
             var response = await SendAuthorizedRequest<T>(HttpMethod.Put, url, inputModel);
             return response.IsSuccessStatusCode;
         }
 
-        public async task<bool> DeleteAsync<T>(string url)
+        public async Task<bool> DeleteAsync<T>(string url)
         {
             var response = await SendAuthorizedRequest<T>(HttpMethod.Delete, url);
             return response.IsSuccessStatusCode;
         }
 
-        private async Task<HttpResponseMessage> SendAuthorizedRequest<T>(
-            HttpMethod method, string url,
-            T content = default, string token = null)
+        private async Task<HttpResponseMessage> SendAuthorizedRequest<T>(HttpMethod method, string url, T content = default, string token = null)
         {
             if (string.IsNullOrWhiteSpace(token))
             {
                 token = await _authStateProvider.GetTokenAsync();
             }
 
-            var request = new HttpRequestMessage(
-                method, $"{Config.ApiResourceUrl}{url}");
+            var request = new HttpRequestMessage(method, $"{Config.ApiResourceUrl}{url}");
 
-            request.Headers.Authorization =
-                new AuthenticationHeaderValue("Bearer", token);
+            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
             if (content != null)
             {
-                var json = JsonSerializer.ToString<object>(
-                    content, _options);
-                request.Content =
-                    new StringContent(json, Encoding.UTF8,
-                    "application/json");
+                var json = JsonSerializer.ToString<object>(content, _options);
+                request.Content = new StringContent(json, Encoding.UTF8, "application/json");
             }
 
             return await _httpClient.SendAsync(request);
