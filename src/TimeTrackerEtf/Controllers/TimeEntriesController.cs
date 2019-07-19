@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -45,6 +46,30 @@ namespace TimeTrackerEtf.Controllers
 
             return TimeEntryModel.FromTimeEntry(timeEntry);
         }
+
+        [HttpGet("user/{userId}/{month}")]
+        public async Task<ActionResult<TimeEntryModel[]>> GetUserAndMonth(long userId, int year, int month)
+        {
+            _logger.LogInformation($"Getting all time entries for month {year}-{month} for user with id {userId}");
+
+            var startDate = new DateTime(year, month, 1);
+            var endDate = startDate.AddMonths(1);
+
+            var timeEntries = await _dbContext.TimeEntries
+                .Include(x => x.User)
+                .Include(x => x.Project)
+                .Include(x => x.Project.Client)
+                .Where(x => x.User.Id == userId && x.EntryDate >= startDate && x.EntryDate < endDate)
+                .OrderBy(x => x.EntryDate)
+                .ToListAsync();
+
+            return timeEntries
+                .Select(TimeEntryModel.FromTimeEntry)
+                .ToArray();
+        }
+
+
+
 
         [HttpGet]
         public async Task<ActionResult<PagedList<TimeEntryModel>>> GetPage(

@@ -53,4 +53,20 @@ else
 
 @code {
 private PagedList<UserModel> users;
+
+protected override async Task OnInitAsync()
+{
+    await LoadUsers();
+}
+
+private async Task LoadUsers(int page = 1)
+{
+    const int pageSize = 5;
+    var url = $"users?page={page}&size={pageSize}";
+
+    users = await ApiService.GetAsync<PagedList<UserModel>>(url);
+
+    base.StateHasChanged();
+
+}
 }

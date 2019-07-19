@@ -1,6 +1,10 @@
 ﻿@page "/login"
-#inject HttpClient Http
-#inject ApiServices ApiServices
+@using Microsoft.AspNetCore.Components
+@using TimeTrackerEtf.Client.Models
+@using TimeTrackerEtf.Client.Security
+@using TimeTrackerEtf.Client.Services
+@inject HttpClient Http
+@inject ApiService ApiService
 @inject TokenAuthenticationStateProvider AuthStateProvider
 @inject IUriHelper UriHelper
 
@@ -24,41 +28,41 @@
 </EditForm>
 
 @code {
-        private string errorMessage { get; set; }
-        private string userId { get; set; } = string.Empty;
+    string errorMessage;
+    string userId = string.Empty;
 
-        public Task LogInRegular()
+    public Task LogInRegular()
+    {
+        return LogIn(false);
+    }
+
+    public Task LogInAdmin()
+    {
+        return LogIn(true);
+    }
+
+    private async Task LogIn(bool admin)
+    {
+        var url = Config.TokenUrl;
+        if (admin)
         {
-            return LogIn(false);
+            url += "?admin=true";
         }
 
-        public Task LogInAdmin()
+        errorMessage = string.Empty;
+
+        try
         {
-            return LogIn(true);
+            var token = await Http.GetStringAsync(url);
+            var user = await ApiService.GetAsync<UserModel>($"users/{userId}", token);
+
+            await AuthStateProvider.SetTokenAndUserAsync(token, user);
+
+            UriHelper.NavigateTo("/");
         }
-
-        private async Task LogIn(bool admin)
+        catch (Exception ex)
         {
-            var url = Config.TokenUrl;
-            if (admin)
-            {
-                url += "?admin=true";
-            }
-
-            errorMessage = string.Empty;
-
-            try
-            {
-                var token = await Http.GetStringAsync(url);
-                var user = await ApiService.GetAsync<UserModel>($"users/{userId}", token);
-
-                await AuthStateProvider.SetTokenAndUserAsync(token, user);
-
-                UriHelper.NavigateTo("/");
-            }
-            catch (Exception ex)
-            {
-                errorMessage = ex.Message;
-            }
+            errorMessage = ex.Message;
         }
     }
+}
